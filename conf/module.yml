@@ -1,0 +1,11 @@
+ip:
+- ip addr show
+mem:
+- free -m
+disk:
+- df -Th
+hostname:
+- hostname
+cd-tmp:
+- cd /tmp && pwd
+- pwd
