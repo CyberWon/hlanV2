@@ -1,64 +1,39 @@
 ﻿#coding:utf-8
-import os,json,mod_sftp
-
-def ServerList(server_ip):
-    f_server=file('conf/server.json')
-    s_server=json.load(f_server)
-    f_server.close()
-    s_list=[]
-    for (k,v) in s_server[server_ip].items():
-        s_list.append(k)
-        s_list.append(v)
-    return s_list
-def ProjectInfo(choice_project):
-    for (k,v) in choice_project.items():
-        print '%s:%s' %(k,v)
-    server_list=ServerList(choice_project['host'])
-    exec_start='%s%s' %(choice_project['path'],choice_project['start'])
-    exec_stop='%s%s' %(choice_project['path'],choice_project['stop'])
-    exec_remotedir='%s%s'%(choice_project['path'],choice_project['file'])
-    #print '%s:%s'%(server_list[0],server_list[1])
-    t=paramiko.Transport((choice_project['host'],22))
-    t.connect(username=server_list[0],password=server_list[1])
-    sftp=paramiko.SFTPClient.from_transport(t)
-    sftp.put(choice_project['local_file'],exec_remotedir)
-    t.close()
-    ssh=paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=choice_project['host'],username=server_list[0],password=server_list[1])
-    print u'上传成功'
-    #执行的命令
-    stdin,stdout,stderr=ssh.exec_command(exec_stop)
-    print stdout.read()    
-    stdin,stdout,stderr=ssh.exec_command(exec_start)
-    print stdout.read()
-    ssh.close()
-def ReadProject():
-    f=file('conf/project.json')
-    s=json.load(f)
-    f.close
+import os,yaml
+from mod import mod_sftp
+def mod_help(): #模块帮助,
+    print 'python hlan.py test -m tomcat -a list #Show Project\npython hlan.py  test -m tomcat -a projectNum'
+def out(gen): #遍历生成器函数
+    for i in gen:
+        if i:
+            print i
+def ServerList(server_ip):  #从服务器存储文件中读取
+    with open('../conf/tomcat_server.yml') as f_server: #打开账号信息文件, 
+        s_server=yaml.load(f_server)
+    return list(s_server[server_ip])+s_server[server_ip].values() #将ip与其对应的账号密码用list返回
+def projectStart(choice_project): #选择项目后开始处理的函数 
+#     for (k,v) in choice_project.items():
+#         print '%s:%s' %(k,v)
+    print ServerList(choice_project['host'].split()[0])
+def ReadProject(): #读取tomcat项目配置文件,并且返回
+    with open('../conf/tomcat_project.yml') as f:
+        s=yaml.load(f)
     return s
-def ProjectList(s):
-    project_list=[]
+def ProjectList(s): #项目列表.使用生成器节省内存空间
     for k in s:
-        project_list.append(k)
-    return project_list
-def PrintProject(project_list):
-    project_index=0
-    while project_index <len(project_list):
-        print '%s.%s' %(project_index,project_list[project_index])
-        project_index=project_index+1
-def mod_main(*argvs):
-    s=ReadProject()
-    ProjectInfo(s[argvs[5]])
-def main(*argvs):
-    print u'项目列表'
-    s=ReadProject()
-    p_list=ProjectList(s)
-    PrintProject(p_list)
-    print u'输入项目编号'
-    choice_index=input('Input:')
-    ProjectInfo(s[argvs[5]])
-if __name__=='__main__':
-    main()
-    
+        yield k
+def mod_main(argvs): #mod_main() hlan定义模块必须.代表脚本将参数传递给模块的开始
+    yield False #hlan定义mod_main()必须参数 . 因为hlan需要接受的返回结果为生成器.
+    try:
+        s=ReadProject()
+        if argvs[5]=='list':   #当list 请求时 列出模块列表
+            out(ProjectList(s))
+        elif argvs[5]=='help': #当help 请求时 触发异常
+            raise Exception
+        else:  #没发生错误时候就开始处理项目了
+            projectStart(s[argvs[5]]) 
+    except Exception,e: #当输入格式不对引发错误显示出模块的正确使用方法
+        print e
+if __name__=='__main__': #编写模块时候调试用
+    argvs=['hlan.py','test','-m','tomcat','-a','rno-api']
+    out(mod_main(argvs))
