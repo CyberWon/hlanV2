@@ -32,9 +32,4 @@ def lianjie(user='',passwd='',host='',port=22):
 def logs(logs_enable=True):
     if logs_enable:
         paramiko.util.log_to_file('logs/syslogin.log')
-if __name__=='__main__':
-    try:
-        conn(user='root',passwd='OneDay1995',ip='119.29.184.223',)
-    except Exception,e:
-        print e
 
