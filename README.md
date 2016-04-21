@@ -12,7 +12,7 @@
 ```shell
 pip install paramiko
 pip install pyyaml
-pip install flask
+pip install flask				#v2.0.2新加.作为web框架使用
 ```
 
 ```python
@@ -24,6 +24,13 @@ python hlan.py 主机组.模块名.参数
 ### V2版本更新计划
 1. SFTP传输上传下载文件
 2. 发布项目
+
+####2016/04/21 V2.0.2
+>1. 重写了了架构.改成三层架构
+>2. 重写了shell模块.为了迎合web设计.返回数据类型为字典
+>3.	添加web形式.现在控制台和web都能使用,框架使用的flask
+>4. [开发文档](https://www.zybuluo.com/iyuesh/note/348373) ,写的有点烂.我慢慢改吧
+
 
 ####2016/04/16 V2.0.1
 >1. 增加了入口规则自定义
