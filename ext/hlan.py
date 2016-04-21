@@ -1,8 +1,11 @@
 #coding:utf-8
 '''
-对hlan main的扩展
+对hlan的扩展
 '''
 def extHlanMain(func):
+    '''
+        对hlan的扩展
+    '''
     def _extHlanMain(argvs):
         li=argvs[1].split('.')
         li.insert(0,'hlan.py')

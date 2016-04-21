@@ -15,16 +15,19 @@ def main(argvs):
     try:
         #使用反射机制加载模块
         load_mod=__import__(argvs[3]) 
-    #载入不存在模块时候 提示.
-    except Exception,e: 
+        #将环境参数传递给模块去处理.模块返回的是生成器,需要遍历才能输出
+        if argvs[5]=='help':
+            mod_out=load_mod.mod_help()
+        else:    
+            mod_out=load_mod.mod_main(argvs) 
+        for i in mod_out:
+            if i:
+                print(i)
+    #载入不存在模块时候或者 模块不存在mod_main()时候 提示.
+    except Exception as e: 
 #         print '%s'%(main_help())
-        print e
+        print(e)
         exit()
-    #将环境参数传递给模块去处理.模块返回的是生成器,需要遍历才能输出
-    mod_out=load_mod.mod_main(argvs) 
-    for i in mod_out:
-        if i:
-            print i
 if __name__=='__main__':
     #添加模块路径到脚本运行时的path路径,告诉脚本从哪儿里寻找模块
     sys.path.append(get_main_path()) 

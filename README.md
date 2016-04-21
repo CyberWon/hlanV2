@@ -9,6 +9,11 @@
 - [X] shell支持多线程(实测20台服务器没使用多线程30秒,多线程12s)
 
 ### 使用方法
+```shell
+pip install paramiko
+pip install pyyaml
+pip install flask
+```
 
 ```python
 #v2.0.0
