@@ -13,7 +13,7 @@ class __redirection__:
     def to_file(self, file_path):
         f=open(file_path,'w') 
         sys.stdout=f 
-        print self.buff 
+        print(self.buff)    
         f.close() 
     def flush(self): 
         self.buff=''

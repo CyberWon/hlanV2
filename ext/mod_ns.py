@@ -27,7 +27,8 @@ class run_cmd():
             str['value']=dt 
             s.close()
         except Exception as e:
-            str['status']=e
+            str['status']='error'
+            str['value']={'error':e}
         finally:
             return str 
 class upload_thread():

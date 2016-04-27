@@ -11,7 +11,7 @@ def execCmd(ip,v,g,rs=True):
     res=rs.run()
     if rs:
         for i in res['value']:
-            print('%s:\n%s')%(res['ip'],res['value'][i])
+            print('%s:\n%s' %(res['ip'],bytes.decode((res['value'][i]))))
     else:
         print(res)
 #     print('ip:%s') % (res['ip'])

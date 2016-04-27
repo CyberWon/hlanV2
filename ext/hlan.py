@@ -2,14 +2,13 @@
 '''
 对hlan的扩展
 '''
-def extHlanMain(func):
-    '''
-        对hlan的扩展
-    '''
-    def _extHlanMain(argvs):
-        li=argvs[1].split('.')
-        li.insert(0,'hlan.py')
-        li.insert(2,'-m')
-        li.insert(4,'-a')
-        func(li)
+def extHlanMain(sp=''):
+    def _extHlanMain(func):
+        def __extHlanMain(argvs):
+            li=argvs[1].split(sp)
+            li.insert(0,'hlan.py')
+            li.insert(2,'-m')
+            li.insert(4,'-a')
+            func(li)
+        return __extHlanMain
     return _extHlanMain
